@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>百炼 RAM AccessKey 取钥匙 · 图文指引</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --card: #ffffff;
+    --ink: #14171e;
+    --muted: #7c7a72;
+    --soft: #3a4256;
+    --line: #e9e3d6;
+    --line-soft: rgba(233, 227, 214, 0.5);
+    --accent: #c97b3f;
+    --accent-soft: rgba(201, 123, 63, 0.08);
+    --danger: #b06367;
+    --ok: #2f6f5e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); }
+  body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 15px;
+    background:
+      radial-gradient(ellipse at top right, rgba(201, 123, 63, 0.04), transparent 60%),
+      radial-gradient(ellipse at bottom left, rgba(47, 111, 94, 0.03), transparent 60%),
+      var(--bg);
+    min-height: 100dvh;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .eyebrow svg { width: 14px; height: 14px; }
+  h1 {
+    font-family: 'DM Serif Display', 'Source Han Serif', 'Noto Serif CJK SC', serif;
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+  .lede {
+    color: var(--soft);
+    font-size: 16px;
+    margin-bottom: 40px;
+    max-width: 640px;
+  }
+  .lede strong { color: var(--accent); font-weight: 600; }
+
+  .step {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 28px 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .step-body { padding-left: 50px; }
+  .step-body p { margin-bottom: 12px; color: var(--soft); }
+  .step-body p:last-child { margin-bottom: 0; }
+  .step-body code, .kbd {
+    font-family: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  .shot {
+    margin: 16px 0 4px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: linear-gradient(180deg, #fcfaf5, #f7f5f0);
+  }
+  .shot-frame {
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--line);
+    background: #fbf9f4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .shot-dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
+  .shot-dot.r { background: #ed6a5e; }
+  .shot-dot.y { background: #f5bf4f; }
+  .shot-dot.g { background: #62c554; }
+  .shot-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: 14px;
+    flex: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .shot-body {
+    padding: 22px 28px 26px;
+    position: relative;
+  }
+  .mock-title {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* Mock UI primitives */
+  .ui-input {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .ui-input.hilite {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .arrow-callout {
+    position: absolute;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .arrow-callout svg { width: 16px; height: 16px; }
+  .badge-step {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Mock step 1: console top */
+  .mock-console-top {
+    background: #1a1a2e;
+    color: #e6e6e6;
+    padding: 10px 18px;
+    border-radius: 10px 10px 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .mock-console-top .crumb { color: #8a8aa0; }
+  .mock-console-top .crumb.now { color: white; font-weight: 500; }
+
+  .mock-sidemenu {
+    background: #20203a;
+    color: #c5c5d8;
+    padding: 16px 0;
+    width: 200px;
+    font-size: 12px;
+  }
+  .mock-sidemenu-item {
+    padding: 9px 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .mock-sidemenu-item.active {
+    background: rgba(201, 123, 63, 0.15);
+    color: var(--accent);
+    border-left: 2px solid var(--accent);
+  }
+
+  .mock-page {
+    display: flex;
+  }
+  .mock-main {
+    flex: 1;
+    background: #fbf9f4;
+    padding: 22px 26px;
+  }
+  .mock-h2 {
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .mock-h3 {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  /* Step 2: create key form */
+  .form-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .form-label {
+    width: 130px;
+    color: var(--muted);
+  }
+  .form-value {
+    flex: 1;
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .form-value.hilite {
+    background: var(--accent-soft);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* Step 3: copy modal */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 23, 30, 0.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal {
+    background: white;
+    border-radius: 14px;
+    width: 80%;
+    max-width: 380px;
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    border: 2px solid var(--accent);
+  }
+  .modal-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .modal-secret {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: #f7f5f0;
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    border-radius: 6px;
+    word-break: break-all;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .modal-warn {
+    font-size: 11px;
+    color: var(--danger);
+    background: rgba(176, 99, 103, 0.08);
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+  }
+  .modal-btn {
+    background: var(--accent);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .tip {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--ok);
+    background: rgba(47, 111, 94, 0.05);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--soft);
+  }
+  .tip strong { color: var(--ok); }
+  .warn {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--danger);
+    background: rgba(176, 99, 103, 0.06);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--soft);
+  }
+  .warn strong { color: var(--danger); }
+
+  .nextstep {
+    margin-top: 36px;
+    padding: 24px;
+    background: var(--ink);
+    color: white;
+    border-radius: 16px;
+    text-align: center;
+  }
+  .nextstep h3 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .nextstep p {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+  .nextstep code {
+    background: rgba(255,255,255,0.15);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    color: white;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="eyebrow">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    约 2 分钟 · 一次完成
+  </span>
+
+  <h1>百炼 RAM AccessKey<br/>取钥匙全流程</h1>
+  <p class="lede">
+    阿里云「百炼」就是 DashScope 服务。你百炼控制台创建的 API Key 跟 RAM AccessKey 是两套钥匙 —— 我们要把模型推到 <strong>OSS Bucket</strong>(免流量费)时用的是 RAM AccessKey,跑模型调用时用的是百炼 API Key。下面只演示<strong>取 RAM AccessKey</strong>。
+  </p>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div class="step-title">进入 RAM 控制台</div>
+    </div>
+    <div class="step-body">
+      <p>浏览器打开 → 右上角头像旁边搜索框 → 输入 <code>RAM</code> → 点 <strong>访问控制 RAM</strong>(不是 RAM 访问助手)。</p>
+      <p>或者直接访问:<code>https://ram.console.aliyun.com/</code></p>
+
+      <div class="shot">
+        <div class="shot-frame">
+          <span class="shot-dot r"></span><span class="shot-dot y"></span><span class="shot-dot g"></span>
+          <span class="shot-url">https://ram.console.aliyun.com/users</span>
+        </div>
+        <div class="shot-body">
+          <div class="mock-console-top">
+            <span style="color:#8a8aa0">aliyun.com</span>
+            <span class="crumb">›</span>
+            <span class="crumb">控制台</span>
+            <span class="crumb">›</span>
+            <span class="crumb now">访问控制</span>
+          </div>
+          <div class="mock-page">
+            <div class="mock-sidemenu">
+              <div class="mock-sidemenu-item">概览</div>
+              <div class="mock-sidemenu-item active">
+                <span>👤</span> 用户
+              </div>
+              <div class="mock-sidemenu-item">用户组</div>
+              <div class="mock-sidemenu-item">角色</div>
+              <div class="mock-sidemenu-item" style="margin-top:14px;color:#8a8aa0;font-size:11px;">&nbsp;&nbsp;&nbsp;我的访问凭证</div>
+              <div class="mock-sidemenu-item" style="padding-left:30px;">AccessKey</div>
+            </div>
+            <div class="mock-main">
+              <div class="mock-h2">用户列表</div>
+              <div class="mock-h3">你当前账号下有 1 个 RAM 用户</div>
+              <div class="form-row">
+                <div class="form-label">用户名</div>
+                <div class="form-value">你的阿里云账号 / 子账号</div>
+              </div>
+              <div class="form-row">
+                <div class="form-label">UID</div>
+                <div class="form-value">1234567890...</div>
+              </div>
+            </div>
+          </div>
+          <div class="arrow-callout" style="bottom:24px;right:30px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>
+            点这里进 AccessKey 页
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>说明:</strong>RAM 控制台和百炼控制台长得不一样 —— 百炼页面里<strong>找不到</strong> AccessKey,必须回 RAM 控制台取。
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div class="step-title">创建 AccessKey</div>
+    </div>
+    <div class="step-body">
+      <p>左侧菜单选 <strong>我的访问凭证</strong> → <strong>AccessKey</strong> → 右上角点 <strong>+ 创建 AccessKey</strong>。</p>
+      <p>弹窗选 <strong>使用云账号 AccessKey</strong>(我们个人账号)→ 短信验证 → 完成。</p>
+
+      <div class="shot">
+        <div class="shot-frame">
+          <span class="shot-dot r"></span><span class="shot-dot y"></span><span class="shot-dot g"></span>
+          <span class="shot-url">https://ram.console.aliyun.com/accesskey</span>
+        </div>
+        <div class="shot-body">
+          <div class="mock-console-top">
+            <span style="color:#8a8aa0">ram.console.aliyun.com</span>
+            <span class="crumb">›</span>
+            <span class="crumb">我的访问凭证</span>
+            <span class="crumb">›</span>
+            <span class="crumb now">AccessKey</span>
+          </div>
+          <div style="padding:18px 24px;background:#fbf9f4;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <div style="font-size:14px;font-weight:600;color:var(--ink);">AccessKey 列表</div>
+              <div style="background:var(--accent);color:white;padding:6px 14px;border-radius:5px;font-size:12px;font-weight:600;">
+                + 创建 AccessKey
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-label">AccessKey ID</div>
+              <div class="form-value">LTAI5tXXXXXXXXXXXXXX</div>
+            </div>
+            <div class="form-row">
+              <div class="form-label">状态</div>
+              <div class="form-value" style="color:var(--ok);">● 启用中</div>
+            </div>
+            <div class="form-row">
+              <div class="form-label">创建时间</div>
+              <div class="form-value">2026-06-18 17:00:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div class="step-title">⚡ 立刻复制 Secret(只显示一次)</div>
+    </div>
+    <div class="step-body">
+      <p>创建成功的瞬间会弹一个窗口,显示 <strong>AccessKey ID</strong> 和 <strong>AccessKey Secret</strong>。<span class="badge-step">关键</span>Secret <strong style="color:var(--danger);">只显示一次</strong>,关掉就没了。</p>
+
+      <div class="shot">
+        <div class="shot-frame">
+          <span class="shot-dot r"></span><span class="shot-dot y"></span><span class="shot-dot g"></span>
+          <span class="shot-url">modal · access key created</span>
+        </div>
+        <div class="shot-body" style="padding:0;height:280px;">
+          <div class="modal-overlay">
+            <div class="modal">
+              <div class="modal-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c97b3f" stroke-width="2"><path d="M12 2L4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/></svg>
+                AccessKey 创建成功
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">AccessKey ID</div>
+              <div class="modal-secret">LTAI5tXXXXXXXXXXXXXX</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">AccessKey Secret</div>
+              <div class="modal-secret">M3XXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+              <div class="modal-warn">⚠ 请妥善保管,关闭后无法再次查看 Secret</div>
+              <div class="modal-btn">下载 CSV · 关闭</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn">
+        <strong>重要:</strong>把 ID 和 Secret 复制发给我之前,<strong>先在阿里云 OSS 控制台把 Bucket 设为"公共读"</strong>(我后面会告诉你具体路径),或者只告诉我 ID,Secret 你先存着,真要用了再贴。
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div class="step-title">顺手建一个 OSS Bucket(可选,我可以帮你)</div>
+    </div>
+    <div class="step-body">
+      <p>如果你想直接把模型推到 OSS,需要先建一个 Bucket。建议:</p>
+      <ul style="margin:8px 0 8px 20px;color:var(--soft);">
+        <li>区域:<code>华东1(杭州)</code> —— 离你近,下载快</li>
+        <li>名称:<code>qwen-deal-finder-models</code>(全网唯一,冲突就加随机后缀)</li>
+        <li>读写权限:<strong style="color:var(--accent);">公共读</strong>(App 端匿名下载模型)</li>
+        <li>冗余:标准存储 + 同城冗余(免费档可用)</li>
+      </ul>
+
+      <div class="tip">
+        <strong>省事方案:</strong>AccessKey 拿到后<strong>只发我 ID 就行</strong>,Bucket 我用 ossutil 命令行帮你建,不用你手动点。
+      </div>
+    </div>
+  </div>
+
+  <div class="nextstep">
+    <h3>把 AccessKey 发给我,我就接着干</h3>
+    <p>直接贴 <code>AccessKey ID</code> 就行,Secret 先存着,我建好 Bucket 再贴。或者 <code>AccessKey ID</code> + <code>Secret</code> 一起贴,我一次跑通。</p>
+  </div>
+
+</div>
+</body>
+</html>

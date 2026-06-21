@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 拍照输出:filesDir/photos/ -->
+    <files-path
+        name="photos"
+        path="photos/" />
+    <!-- 兜底:filesDir 全部 -->
+    <files-path
+        name="files"
+        path="." />
+</paths>

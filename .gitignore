@@ -1,0 +1,78 @@
+# ===== Gradle =====
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+**/.gradle/
+
+# ===== Android Studio =====
+.idea/
+*.iml
+local.properties
+captures/
+.navigation/
+.cxx/
+
+# ===== Android =====
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+release/
+**/jniLibs/*/lib*.so
+
+# ===== Backup files =====
+*.bak
+*.backup
+*.swp
+*~
+
+# ===== Logs =====
+*.log
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Local tools & SDK (not project source) =====
+/tools/
+/downloads/
+/__pycache__/
+**/__pycache__/
+
+# ===== Local models & MNN builds =====
+/models/
+/MNN/
+/build_64/
+/android-app/.gradle/
+/android-app/build/
+/android-app/app/build/
+/android-app/local.properties
+
+# ===== Screenshots & artifacts =====
+/logs/
+
+# ===== Temporary scripts (debugging) =====
+/tmp_*.py
+/xhs_step1*.py
+/xhs_step1*.py
+/scan_privacy.py
+
+# ===== OSS util config & cache =====
+.ossutil_checkpoint/
+*.ossutilconfig
+
+# ===== Generated documents =====
+*.docx
+
+# ===== Misc =====
+/download_model.py
+/*.zip
+/*.jar
+/args.json
+/test_path*.ps1
+/xhs_step1*.py

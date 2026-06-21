@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 暖橙主题色板(对齐豆包 AI 设计稿) -->
+    <color name="brand_orange">#FF9966</color>
+    <color name="brand_orange_dark">#F2784B</color>
+    <color name="brand_orange_light">#FFB892</color>
+    <color name="brand_orange_soft">#FFE0CC</color>
+    <color name="bg_cream">#FFF8F2</color>
+    <color name="bg_white">#FFFFFFFF</color>
+    <color name="text_primary">#1F1F1F</color>
+    <color name="text_secondary">#666666</color>
+    <color name="text_tertiary">#999999</color>
+    <color name="divider">#FFE5D6</color>
+    <color name="success_green">#4CAF50</color>
+    <color name="deal_highlight_bg">#FFE8D9</color>
+    <color name="best_price_red">#D32F2F</color>
+    <color name="black_dim">#CC000000</color>
+</resources>
