@@ -7,28 +7,30 @@
 <meta name="description" content="扫一下餐厅招牌，1秒比价5个平台，全程离线不联网">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #141414;
-    --bg-card: #1a1a1a;
-    --accent-primary: #ff6b35;
-    --accent-secondary: #ffb347;
-    --accent-gradient: linear-gradient(135deg, #ff6b35 0%, #ffb347 100%);
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --text-muted: #666666;
-    --border-color: #2a2a2a;
+    --brand-orange: #FF9966;
+    --brand-orange-dark: #F2784B;
+    --brand-orange-light: #FFB892;
+    --brand-orange-soft: #FFE0CC;
+    --bg-cream: #FFF8F2;
+    --bg-white: #FFFFFF;
+    --text-primary: #1F1F1F;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --divider: #FFE5D6;
+    --best-price-red: #D32F2F;
+    --accent-gradient: linear-gradient(135deg, #FFB347 0%, #FF6B35 100%);
   }
 
   html { scroll-behavior: smooth; }
 
   body {
     font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-primary);
+    background: var(--bg-cream);
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
@@ -39,46 +41,18 @@
     letter-spacing: -0.02em;
   }
 
-  /* Background effects */
-  .bg-orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.15;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .bg-orb-1 {
-    width: 600px;
-    height: 600px;
-    background: var(--accent-primary);
-    top: -200px;
-    right: -100px;
-  }
-
-  .bg-orb-2 {
-    width: 500px;
-    height: 500px;
-    background: var(--accent-secondary);
-    bottom: -150px;
-    left: -100px;
-  }
-
   /* Navigation */
   nav {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     z-index: 100;
-    padding: 20px 40px;
+    padding: 16px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     backdrop-filter: blur(20px);
-    background: rgba(10, 10, 10, 0.8);
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(255, 248, 242, 0.85);
+    border-bottom: 1px solid var(--divider);
   }
 
   .nav-logo {
@@ -87,16 +61,19 @@
     gap: 10px;
     font-weight: 700;
     font-size: 20px;
+    color: var(--text-primary);
   }
 
   .nav-logo-icon {
     width: 36px;
     height: 36px;
-    background: var(--accent-gradient);
-    border-radius: 10px;
+    background: var(--brand-orange);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
+    font-weight: 800;
     font-size: 18px;
   }
 
@@ -104,6 +81,7 @@
     display: flex;
     gap: 32px;
     list-style: none;
+    align-items: center;
   }
 
   .nav-links a {
@@ -114,21 +92,20 @@
     transition: color 0.3s;
   }
 
-  .nav-links a:hover {
-    color: var(--accent-primary);
-  }
+  .nav-links a:hover { color: var(--brand-orange-dark); }
 
   .nav-cta {
     padding: 10px 24px;
     background: var(--accent-gradient);
-    border-radius: 8px;
+    border-radius: 10px;
     color: #fff !important;
     font-weight: 600;
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.25);
   }
 
   /* Container */
   .container {
-    max-width: 1200px;
+    max-width: 1160px;
     margin: 0 auto;
     padding: 0 40px;
     position: relative;
@@ -144,8 +121,12 @@
     position: relative;
   }
 
-  .hero-content {
-    max-width: 650px;
+  .hero-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
   }
 
   .hero-badge {
@@ -153,30 +134,28 @@
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background: rgba(255, 107, 53, 0.1);
-    border: 1px solid rgba(255, 107, 53, 0.3);
+    background: rgba(255, 153, 102, 0.1);
+    border: 1px solid rgba(255, 153, 102, 0.3);
     border-radius: 100px;
     font-size: 13px;
     font-weight: 500;
-    color: var(--accent-primary);
+    color: var(--brand-orange-dark);
     margin-bottom: 24px;
-    animation: fadeInUp 0.8s ease-out;
   }
 
   .hero-badge-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--accent-primary);
+    width: 6px; height: 6px;
+    background: var(--brand-orange);
     border-radius: 50%;
     animation: pulse 2s infinite;
   }
 
   .hero h1 {
-    font-size: clamp(40px, 6vw, 72px);
+    font-size: clamp(36px, 5vw, 56px);
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.15;
     margin-bottom: 20px;
-    animation: fadeInUp 0.8s ease-out 0.1s both;
+    color: var(--text-primary);
   }
 
   .hero h1 span {
@@ -187,22 +166,26 @@
   }
 
   .hero-subtitle {
-    font-size: clamp(16px, 2vw, 20px);
+    font-size: 17px;
     color: var(--text-secondary);
-    margin-bottom: 40px;
-    line-height: 1.7;
-    animation: fadeInUp 0.8s ease-out 0.2s both;
+    margin-bottom: 36px;
+    line-height: 1.8;
+  }
+
+  .hero-subtitle strong {
+    color: var(--brand-orange-dark);
+    font-weight: 600;
   }
 
   .hero-buttons {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
-    animation: fadeInUp 0.8s ease-out 0.3s both;
+    margin-bottom: 48px;
   }
 
   .btn {
-    padding: 14px 32px;
+    padding: 14px 28px;
     border-radius: 12px;
     font-size: 15px;
     font-weight: 600;
@@ -218,70 +201,66 @@
   .btn-primary {
     background: var(--accent-gradient);
     color: #fff;
-    box-shadow: 0 4px 24px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 28px rgba(255, 107, 53, 0.35);
   }
 
   .btn-secondary {
-    background: transparent;
+    background: var(--bg-white);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--divider);
   }
 
   .btn-secondary:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+    border-color: var(--brand-orange);
+    color: var(--brand-orange-dark);
   }
 
-  .hero-stats {
+  .hero-features {
     display: flex;
-    gap: 48px;
-    margin-top: 60px;
-    animation: fadeInUp 0.8s ease-out 0.4s both;
+    gap: 32px;
+    flex-wrap: wrap;
   }
 
-  .hero-stat {
-    text-align: left;
+  .hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
   }
 
-  .hero-stat-number {
-    font-size: 36px;
-    font-weight: 900;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-family: 'Space Grotesk', sans-serif;
+  .hero-feature-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--brand-orange-soft);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
   }
 
-  .hero-stat-label {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-
-  /* Hero Visual */
-  .hero-visual {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 45%;
-    max-width: 500px;
+  /* Phone Mockup */
+  .phone-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .phone-mockup {
     position: relative;
+    width: 300px;
     aspect-ratio: 9/19;
-    background: var(--bg-card);
-    border-radius: 40px;
-    border: 3px solid #333;
+    background: var(--bg-cream);
+    border-radius: 42px;
+    border: 3px solid #2a2a2a;
     overflow: hidden;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-color);
+    box-shadow: 0 40px 80px rgba(255, 153, 102, 0.2), 0 20px 40px rgba(0, 0, 0, 0.1);
   }
 
   .phone-notch {
@@ -290,173 +269,380 @@
     left: 50%;
     transform: translateX(-50%);
     width: 120px;
-    height: 30px;
-    background: #000;
-    border-radius: 0 0 20px 20px;
+    height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 18px 18px;
     z-index: 10;
   }
 
   .phone-screen {
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-    padding: 50px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    background: var(--bg-cream);
+    padding: 44px 0 72px 0;
+    overflow: hidden;
+    position: relative;
   }
 
-  .phone-header {
+  /* App Home Screen */
+  .app-topbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0 8px;
+    padding: 12px 16px;
   }
 
-  .phone-title {
+  .app-logo-box {
+    width: 32px;
+    height: 32px;
+    background: var(--brand-orange);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .app-title {
     font-size: 18px;
     font-weight: 700;
-    color: #fff;
+    margin-left: 8px;
+    color: var(--text-primary);
   }
 
-  .phone-scan-btn {
-    width: 100%;
-    padding: 16px;
-    background: var(--accent-gradient);
-    border-radius: 16px;
-    color: #fff;
-    font-weight: 700;
-    font-size: 16px;
-    text-align: center;
-    margin-top: auto;
-    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.4);
+  .app-topbar-plus {
+    margin-left: auto;
+    font-size: 20px;
+    color: var(--text-primary);
   }
 
-  .phone-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 12px;
-    backdrop-filter: blur(10px);
+  /* Big Capture Circle */
+  .capture-circle-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 4px;
   }
 
-  .phone-card-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
+  .capture-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #FFE0CC 0%, #FFCBA9 60%, #FFB892 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .capture-circle-inner {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: #FFF6EC;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .capture-camera {
+    width: 52px;
+    height: 52px;
+    background: var(--brand-orange);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
     margin-bottom: 8px;
   }
 
-  .phone-card-row {
+  .capture-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .capture-sub {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+
+  /* Recent Section */
+  .section-label {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 8px 16px 6px;
+  }
+
+  .section-label-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .section-label-count {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  .section-label-clear {
     font-size: 12px;
-    color: var(--text-secondary);
+    color: var(--brand-orange);
+  }
+
+  .recent-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px;
+    overflow-x: auto;
+  }
+
+  .recent-card {
+    flex-shrink: 0;
+    width: 78px;
+    height: 78px;
+    background: var(--brand-orange-soft);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .recent-emoji { font-size: 22px; }
+  .recent-name {
+    font-size: 10px;
+    color: var(--text-primary);
+    margin-top: 4px;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .recent-price {
+    font-size: 10px;
+    color: var(--best-price-red);
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* Flash Sale Section */
+  .flash-section {
+    margin-top: 12px;
+  }
+
+  .flash-cards {
+    display: flex;
+    gap: 8px;
+    padding: 6px 16px 0;
+    overflow-x: auto;
+  }
+
+  .flash-card {
+    flex-shrink: 0;
+    width: 120px;
+    background: white;
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .flash-emoji-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #FFF1E8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 6px;
+  }
+
+  .flash-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .flash-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin: 4px 0 6px;
+  }
+
+  .flash-original {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-decoration: line-through;
+  }
+
+  .flash-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--best-price-red);
+  }
+
+  .flash-price small {
+    font-size: 10px;
+  }
+
+  .flash-btn {
+    width: 100%;
+    padding: 4px 0;
+    background: var(--accent-gradient);
+    border-radius: 10px;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* Bottom Tab Bar */
+  .bottom-tabbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #f0f0f0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+  }
+
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
     padding: 4px 0;
   }
 
-  .phone-card-price {
-    color: var(--accent-primary);
-    font-weight: 700;
-    font-family: 'Space Grotesk', sans-serif;
+  .tab-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .tab-item.active .tab-icon {
+    background: var(--brand-orange-soft);
+  }
+
+  .tab-label {
+    font-size: 10px;
+    color: var(--text-tertiary);
+  }
+
+  .tab-item.active .tab-label {
+    color: var(--brand-orange-dark);
+    font-weight: 600;
   }
 
   /* Section common */
   section {
-    padding: 120px 0;
+    padding: 100px 0;
     position: relative;
     z-index: 1;
   }
 
   .section-header {
     text-align: center;
-    margin-bottom: 64px;
+    margin-bottom: 56px;
   }
 
   .section-tag {
     display: inline-block;
     padding: 6px 16px;
-    background: rgba(255, 107, 53, 0.1);
-    color: var(--accent-primary);
+    background: rgba(255, 153, 102, 0.1);
+    color: var(--brand-orange-dark);
     border-radius: 100px;
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    margin-bottom: 14px;
   }
 
   .section-title {
-    font-size: clamp(32px, 4vw, 48px);
-    font-weight: 900;
-    line-height: 1.2;
-    margin-bottom: 16px;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 14px;
+    color: var(--text-primary);
   }
 
   .section-subtitle {
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-secondary);
-    max-width: 600px;
+    max-width: 560px;
     margin: 0 auto;
+    line-height: 1.7;
   }
 
   /* Features Section */
+  .features-section {
+    background: var(--bg-white);
+  }
+
   .features-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 20px;
   }
 
   .feature-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: var(--bg-cream);
     border-radius: 20px;
-    padding: 32px;
+    padding: 32px 28px;
     transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .feature-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--accent-gradient);
-    transform: scaleX(0);
-    transition: transform 0.3s;
-    transform-origin: left;
+    border: 1px solid transparent;
   }
 
   .feature-card:hover {
-    border-color: rgba(255, 107, 53, 0.3);
+    border-color: var(--brand-orange-soft);
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  }
-
-  .feature-card:hover::before {
-    transform: scaleX(1);
+    box-shadow: 0 16px 40px rgba(255, 153, 102, 0.1);
   }
 
   .feature-icon {
     width: 56px;
     height: 56px;
-    background: rgba(255, 107, 53, 0.1);
+    background: white;
     border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 28px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(255, 153, 102, 0.1);
   }
 
   .feature-title {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    color: var(--text-primary);
   }
 
   .feature-desc {
@@ -466,49 +652,51 @@
   }
 
   /* Tech Section */
-  .tech-section {
-    background: var(--bg-secondary);
-  }
-
   .tech-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
 
   .tech-item {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     padding: 24px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: white;
     border-radius: 16px;
+    border: 1px solid var(--divider);
   }
 
   .tech-icon {
     width: 48px;
     height: 48px;
     flex-shrink: 0;
-    background: rgba(255, 179, 71, 0.1);
+    background: var(--brand-orange-soft);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .tech-content h4 {
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
   }
 
   .tech-content p {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-secondary);
+    line-height: 1.6;
   }
 
   /* Performance Section */
+  .perf-section {
+    background: var(--bg-white);
+  }
+
   .perf-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -517,20 +705,19 @@
 
   .perf-card {
     text-align: center;
-    padding: 40px 24px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    padding: 36px 20px;
+    background: var(--bg-cream);
     border-radius: 20px;
     transition: all 0.3s;
   }
 
   .perf-card:hover {
-    border-color: rgba(255, 107, 53, 0.3);
     transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(255, 153, 102, 0.12);
   }
 
   .perf-number {
-    font-size: 48px;
+    font-size: 44px;
     font-weight: 900;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
@@ -541,59 +728,57 @@
     margin-bottom: 8px;
   }
 
+  .perf-number .unit {
+    font-size: 18px;
+    font-weight: 600;
+    -webkit-text-fill-color: var(--brand-orange-dark);
+  }
+
   .perf-label {
     font-size: 14px;
     color: var(--text-secondary);
   }
 
-  .perf-unit {
-    font-size: 20px;
-    font-weight: 500;
-  }
-
   /* Privacy Section */
-  .privacy-section {
-    background: var(--bg-secondary);
-  }
-
   .privacy-card {
-    max-width: 800px;
+    max-width: 760px;
     margin: 0 auto;
     padding: 48px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: white;
     border-radius: 24px;
     text-align: center;
+    border: 1px solid var(--divider);
   }
 
   .privacy-icon {
-    font-size: 64px;
-    margin-bottom: 24px;
+    font-size: 56px;
+    margin-bottom: 20px;
   }
 
   .privacy-card h3 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 800;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    color: var(--text-primary);
   }
 
-  .privacy-card p {
-    font-size: 16px;
+  .privacy-card > p {
+    font-size: 15px;
     color: var(--text-secondary);
     line-height: 1.8;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
   }
 
   .privacy-list {
     list-style: none;
     text-align: left;
-    max-width: 500px;
+    max-width: 440px;
     margin: 0 auto;
   }
 
   .privacy-list li {
     padding: 12px 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--divider);
     font-size: 14px;
     color: var(--text-secondary);
     display: flex;
@@ -601,26 +786,32 @@
     gap: 12px;
   }
 
-  .privacy-list li:last-child {
-    border-bottom: none;
-  }
+  .privacy-list li:last-child { border-bottom: none; }
 
   .privacy-check {
-    color: var(--accent-primary);
-    font-weight: bold;
-    font-size: 18px;
+    width: 24px;
+    height: 24px;
+    background: var(--brand-orange-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-orange-dark);
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
   }
 
   /* CTA Section */
   .cta-section {
-    text-align: center;
+    background: var(--bg-white);
   }
 
   .cta-card {
-    padding: 80px 40px;
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 179, 71, 0.1) 100%);
-    border: 1px solid rgba(255, 107, 53, 0.2);
-    border-radius: 32px;
+    padding: 64px 40px;
+    background: var(--accent-gradient);
+    border-radius: 28px;
+    text-align: center;
     position: relative;
     overflow: hidden;
   }
@@ -628,66 +819,74 @@
   .cta-card::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
-    animation: rotate 20s linear infinite;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+    animation: rotate 25s linear infinite;
   }
 
-  .cta-card > * {
-    position: relative;
-    z-index: 1;
-  }
+  .cta-card > * { position: relative; z-index: 1; }
 
   .cta-card h2 {
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 900;
-    margin-bottom: 16px;
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: white;
   }
 
   .cta-card p {
-    font-size: 18px;
-    color: var(--text-secondary);
-    margin-bottom: 32px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 28px;
   }
 
   .cta-buttons {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .btn-white {
+    background: white;
+    color: var(--brand-orange-dark);
+    font-weight: 700;
+  }
+
+  .btn-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .btn-outline-white {
+    background: transparent;
+    color: white;
+    border: 1.5px solid rgba(255,255,255,0.6);
+  }
+
+  .btn-outline-white:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
   }
 
   /* Footer */
   footer {
     padding: 40px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--divider);
     text-align: center;
-    color: var(--text-muted);
-    font-size: 14px;
+    color: var(--text-tertiary);
+    font-size: 13px;
     position: relative;
     z-index: 1;
+    background: var(--bg-cream);
   }
 
   footer a {
-    color: var(--accent-primary);
+    color: var(--brand-orange-dark);
     text-decoration: none;
   }
 
   /* Animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -698,65 +897,59 @@
     to { transform: rotate(360deg); }
   }
 
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .animate-fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   /* Responsive */
   @media (max-width: 968px) {
-    .features-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .tech-grid {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .container { padding: 0 20px; }
+    section { padding: 72px 0; }
+
+    .hero-wrapper {
       grid-template-columns: 1fr;
+      gap: 40px;
+      text-align: center;
     }
-    .perf-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .hero-visual {
-      display: none;
-    }
-    .hero-content {
-      max-width: 100%;
-    }
-    .nav-links {
-      display: none;
-    }
-    nav {
-      padding: 16px 20px;
-    }
-    .container {
-      padding: 0 20px;
-    }
-    section {
-      padding: 80px 0;
-    }
+
+    .hero-buttons, .hero-features { justify-content: center; }
+
+    .features-grid { grid-template-columns: 1fr; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .perf-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .privacy-card { padding: 36px 24px; }
+    .cta-card { padding: 48px 24px; }
   }
 
   @media (max-width: 640px) {
-    .features-grid {
-      grid-template-columns: 1fr;
-    }
-    .perf-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .hero-stats {
-      gap: 24px;
-    }
-    .hero-stat-number {
-      font-size: 28px;
-    }
-    .privacy-card {
-      padding: 32px 24px;
-    }
+    .perf-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .perf-card { padding: 28px 12px; }
+    .perf-number { font-size: 36px; }
+    .phone-mockup { width: 260px; }
   }
 </style>
 </head>
 <body>
 
-<div class="bg-orb bg-orb-1"></div>
-<div class="bg-orb bg-orb-2"></div>
-
 <nav>
   <div class="nav-logo">
-    <div class="nav-logo-icon">🍚</div>
-    <span class="font-display">干饭省省</span>
+    <div class="nav-logo-icon">干</div>
+    <span>干饭省省</span>
   </div>
   <ul class="nav-links">
     <li><a href="#features">功能特性</a></li>
@@ -769,64 +962,134 @@
 
 <section class="hero">
   <div class="container">
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="hero-badge-dot"></span>
-        端侧 AI 创新挑战赛参赛作品
-      </div>
-      <h1>
-        扫一下招牌<br>
-        <span>1秒比价5平台</span>
-      </h1>
-      <p class="hero-subtitle">
-        干饭省省是一款基于 MNN + Qwen3-VL 的端侧 AI 干饭比价 App。
-        对准餐厅招牌拍一张照，自动识别品牌并比对 5 大平台价格，
-        <strong>全程离线、照片不上云</strong>。
-      </p>
-      <div class="hero-buttons">
-        <a href="#features" class="btn btn-primary">了解更多 →</a>
-        <a href="https://github.com/xiaobaotalks/ganfan" class="btn btn-secondary">GitHub 源码</a>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="hero-stat-number">5</div>
-          <div class="hero-stat-label">比价平台</div>
+    <div class="hero-wrapper">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          端侧 AI 创新挑战赛参赛作品
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-number">100%</div>
-          <div class="hero-stat-label">离线运行</div>
+        <h1>
+          扫一下餐厅招牌<br>
+          <span>1秒比价5个平台</span>
+        </h1>
+        <p class="hero-subtitle">
+          干饭省省是一款基于 <strong>MNN + Qwen3-VL</strong> 的端侧 AI 干饭比价 App。
+          对准餐厅招牌拍一张照，自动识别品牌并比对 5 大平台价格，
+          <strong>全程离线、照片不上云</strong>。
+        </p>
+        <div class="hero-buttons">
+          <a href="#features" class="btn btn-primary">了解更多 →</a>
+          <a href="https://github.com/xiaobaotalks/ganfan" class="btn btn-secondary">GitHub 源码</a>
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-number">1.5GB</div>
-          <div class="hero-stat-label">模型大小</div>
-        </div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="phone-mockup">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="phone-header">
-            <span class="phone-title">🍚 干饭省省</span>
-            <span style="font-size: 12px; color: #ff6b35;">● 离线模式</span>
+        <div class="hero-features">
+          <div class="hero-feature">
+            <div class="hero-feature-icon">📸</div>
+            <span>招牌识别</span>
           </div>
-          <div class="phone-card">
-            <div class="phone-card-title">🏪 麦当劳（南京路店）</div>
-            <div class="phone-card-row">
-              <span>抖音团购</span>
-              <span class="phone-card-price">¥19.9</span>
-            </div>
-            <div class="phone-card-row">
-              <span>美团外卖</span>
-              <span style="color: #a0a0a0;">¥29.9</span>
-            </div>
-            <div class="phone-card-row">
-              <span>淘宝闪购</span>
-              <span style="color: #a0a0a0;">¥25.9</span>
-            </div>
+          <div class="hero-feature">
+            <div class="hero-feature-icon">💰</div>
+            <span>5平台比价</span>
           </div>
-          <div class="phone-scan-btn">
-            📸 扫招牌比价
+          <div class="hero-feature">
+            <div class="hero-feature-icon">🔒</div>
+            <span>100%离线</span>
+          </div>
+        </div>
+      </div>
+      <div class="phone-section">
+        <div class="phone-mockup">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <!-- App Home Screen -->
+            <div class="app-topbar">
+              <div class="app-logo-box">干</div>
+              <span class="app-title">干饭省省</span>
+              <span class="app-topbar-plus">⊕</span>
+            </div>
+
+            <div class="capture-circle-wrap">
+              <div class="capture-circle">
+                <div class="capture-circle-inner">
+                  <div class="capture-camera">📷</div>
+                  <div class="capture-text">扫招牌比价</div>
+                  <div class="capture-sub">对准招牌 · 自动识别</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-label">
+              <div class="section-label-title">
+                最近识别
+                <span class="section-label-count">(3/5)</span>
+              </div>
+              <span class="section-label-clear">🗑 清空</span>
+            </div>
+            <div class="recent-row">
+              <div class="recent-card">
+                <div class="recent-emoji">📸</div>
+                <div class="recent-name">爆汁小虾</div>
+                <div class="recent-price">¥39</div>
+              </div>
+              <div class="recent-card">
+                <div class="recent-emoji">📸</div>
+                <div class="recent-name">瑞幸咖啡</div>
+                <div class="recent-price">¥8.8</div>
+              </div>
+              <div class="recent-card">
+                <div class="recent-emoji">📸</div>
+                <div class="recent-name">麦当劳</div>
+                <div class="recent-price">¥11.9</div>
+              </div>
+            </div>
+
+            <div class="flash-section">
+              <div class="section-label">
+                <div class="section-label-title">
+                  ⚡ 秒省精选
+                </div>
+                <span class="section-label-clear" style="color: var(--brand-orange);">更多 ›</span>
+              </div>
+              <div class="flash-cards">
+                <div class="flash-card">
+                  <div class="flash-emoji-box">🍔</div>
+                  <div class="flash-name">巨无霸套餐</div>
+                  <div class="flash-price-row">
+                    <span class="flash-original">¥35</span>
+                  </div>
+                  <div class="flash-price"><small>¥</small>11</div>
+                  <div class="flash-btn">立即抢购</div>
+                </div>
+                <div class="flash-card">
+                  <div class="flash-emoji-box">☕</div>
+                  <div class="flash-name">生椰拿铁</div>
+                  <div class="flash-price-row">
+                    <span class="flash-original">¥32</span>
+                  </div>
+                  <div class="flash-price"><small>¥</small>8.8</div>
+                  <div class="flash-btn">立即抢购</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Tab Bar -->
+            <div class="bottom-tabbar">
+              <div class="tab-item active">
+                <div class="tab-icon">🏠</div>
+                <div class="tab-label">首页</div>
+              </div>
+              <div class="tab-item">
+                <div class="tab-icon">⚡</div>
+                <div class="tab-label">秒省</div>
+              </div>
+              <div class="tab-item">
+                <div class="tab-icon">👥</div>
+                <div class="tab-label">省圈</div>
+              </div>
+              <div class="tab-item">
+                <div class="tab-icon">👤</div>
+                <div class="tab-label">我的</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -834,146 +1097,146 @@
   </div>
 </section>
 
-<section id="features">
+<section id="features" class="features-section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header animate-fade-up">
       <span class="section-tag">功能特性</span>
       <h2 class="section-title">为什么选择干饭省省？</h2>
       <p class="section-subtitle">端侧 AI 加持，让每一顿饭都吃得更划算</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card">
+      <div class="feature-card animate-fade-up">
         <div class="feature-icon">📸</div>
         <h3 class="feature-title">招牌智能识别</h3>
-        <p class="feature-desc">对准餐厅招牌拍一张照，端侧 VLM 模型直接识别品牌名称，无需手动输入搜索。</p>
+        <p class="feature-desc">对准餐厅招牌拍一张照，端侧 VLM 模型直接识别品牌名称，无需手动输入搜索，一拍即得。</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card animate-fade-up">
         <div class="feature-icon">💰</div>
         <h3 class="feature-title">五平台实时比价</h3>
-        <p class="feature-desc">覆盖抖音团购、美团、美团外卖、淘宝闪购、京东秒送，一键直达最低价。</p>
+        <p class="feature-desc">覆盖抖音团购、美团、美团外卖、淘宝闪购、京东秒送，一键直达最低价，省钱又省心。</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card animate-fade-up">
         <div class="feature-icon">📍</div>
         <h3 class="feature-title">GPS 自动匹配</h3>
-        <p class="feature-desc">根据当前位置自动筛选最近的分店，比价结果更精准，导航更方便。</p>
+        <p class="feature-desc">根据当前位置自动筛选最近的分店，比价结果更精准，一键导航直达门店。</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card animate-fade-up">
         <div class="feature-icon">🔒</div>
         <h3 class="feature-title">完全离线运行</h3>
-        <p class="feature-desc">招牌照片 100% 本地处理，不上传任何服务器。飞行模式也能正常使用。</p>
+        <p class="feature-desc">招牌照片 100% 本地处理，不上传任何服务器。飞行模式也能正常使用，隐私无忧。</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card animate-fade-up">
         <div class="feature-icon">⚡</div>
         <h3 class="feature-title">秒省限时秒杀</h3>
-        <p class="feature-desc">饭点限时秒杀专区，实时展示各大平台的超值套餐，手慢无。</p>
+        <p class="feature-desc">饭点限时秒杀专区，实时展示各大平台的超值套餐，手慢无，错过再等一天。</p>
       </div>
-      <div class="feature-card">
+      <div class="feature-card animate-fade-up">
         <div class="feature-icon">👥</div>
         <h3 class="feature-title">省圈拼单拼团</h3>
-        <p class="feature-desc">本地干饭群，拼单拼团更划算。发现更多周边美食优惠。</p>
+        <p class="feature-desc">本地干饭群，拼单拼团更划算。发现更多周边美食优惠，一起省钱一起吃。</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="tech" class="tech-section">
+<section id="tech">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header animate-fade-up">
       <span class="section-tag">技术栈</span>
       <h2 class="section-title">硬核技术，端侧开花</h2>
       <p class="section-subtitle">基于 MNN 推理框架 + Qwen3-VL 多模态大模型</p>
     </div>
     <div class="tech-grid">
-      <div class="tech-item">
+      <div class="tech-item animate-fade-up">
         <div class="tech-icon">🧠</div>
         <div class="tech-content">
           <h4>MNN 推理框架</h4>
-          <p>阿里开源端侧推理引擎，高性能、轻量级，支持 INT4 量化加速</p>
+          <p>阿里开源端侧推理引擎，高性能、轻量级，支持 INT4 量化加速，手机端流畅运行。</p>
         </div>
       </div>
-      <div class="tech-item">
+      <div class="tech-item animate-fade-up">
         <div class="tech-icon">🤖</div>
         <div class="tech-content">
           <h4>Qwen3-VL-2B-Instruct</h4>
-          <p>通义千问多模态大模型，20 亿参数，视觉理解能力出色</p>
+          <p>通义千问多模态大模型，20 亿参数，视觉理解能力出色，招牌识别准确率高。</p>
         </div>
       </div>
-      <div class="tech-item">
+      <div class="tech-item animate-fade-up">
         <div class="tech-icon">📱</div>
         <div class="tech-content">
           <h4>Android + Jetpack Compose</h4>
-          <p>现代声明式 UI 框架，流畅的原生体验，Material You 设计</p>
+          <p>现代声明式 UI 框架，流畅的原生体验，Material 3 设计，暖橙主题。</p>
         </div>
       </div>
-      <div class="tech-item">
+      <div class="tech-item animate-fade-up">
         <div class="tech-icon">⚙️</div>
         <div class="tech-content">
           <h4>C++ / JNI / CMake</h4>
-          <p>原生层实现推理逻辑，通过 JNI 与 Kotlin 交互，性能最大化</p>
+          <p>原生层实现推理逻辑，通过 JNI 与 Kotlin 交互，性能最大化，延迟更低。</p>
         </div>
       </div>
-      <div class="tech-item">
+      <div class="tech-item animate-fade-up">
         <div class="tech-icon">🌐</div>
         <div class="tech-content">
           <h4>OkHttp + 高德 POI</h4>
-          <p>联网模式下获取高德 POI 公开数据，补充餐厅信息</p>
+          <p>联网模式下获取高德 POI 公开数据，补充餐厅信息，价格实时更新。</p>
         </div>
       </div>
-      <div class="tech-item">
+      <div class="tech-item animate-fade-up">
         <div class="tech-icon">📍</div>
         <div class="tech-content">
           <h4>Android Location</h4>
-          <p>系统级 GPS 定位，精确匹配附近门店，保护位置隐私</p>
+          <p>系统级 GPS 定位，精确匹配附近门店，保护位置隐私，数据不流出设备。</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="perf">
+<section id="perf" class="perf-section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header animate-fade-up">
       <span class="section-tag">性能数据</span>
       <h2 class="section-title">速度与激情</h2>
       <p class="section-subtitle">骁龙 8 Gen 2 及以上机型实测数据</p>
     </div>
     <div class="perf-grid">
-      <div class="perf-card">
-        <div class="perf-number">13.86<span class="perf-unit">tok/s</span></div>
+      <div class="perf-card animate-fade-up">
+        <div class="perf-number">13.86<span class="unit"> tok/s</span></div>
         <div class="perf-label">推理速度</div>
       </div>
-      <div class="perf-card">
-        <div class="perf-number">1-2<span class="perf-unit">s</span></div>
+      <div class="perf-card animate-fade-up">
+        <div class="perf-number">1-2<span class="unit"> 秒</span></div>
         <div class="perf-label">招牌识别</div>
       </div>
-      <div class="perf-card">
-        <div class="perf-number">1.5<span class="perf-unit">GB</span></div>
+      <div class="perf-card animate-fade-up">
+        <div class="perf-number">1.5<span class="unit"> GB</span></div>
         <div class="perf-label">模型大小</div>
       </div>
-      <div class="perf-card">
-        <div class="perf-number">INT4</div>
+      <div class="perf-card animate-fade-up">
+        <div class="perf-number" style="font-size: 36px; padding-top: 6px;">INT4</div>
         <div class="perf-label">量化方式</div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="privacy" class="privacy-section">
+<section id="privacy">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header animate-fade-up">
       <span class="section-tag">隐私保护</span>
       <h2 class="section-title">你的照片，只属于你</h2>
       <p class="section-subtitle">我们坚信，用户的隐私比什么都重要</p>
     </div>
-    <div class="privacy-card">
+    <div class="privacy-card animate-fade-up">
       <div class="privacy-icon">🔐</div>
       <h3>100% 本地处理</h3>
       <p>所有图像识别和推理都在手机本地完成，招牌照片不会上传到任何服务器。</p>
       <ul class="privacy-list">
-        <li><span class="privacy-check">✓</span> 招牌照片不上云</li>
-        <li><span class="privacy-check">✓</span> 飞行模式也能用</li>
-        <li><span class="privacy-check">✓</span> 不收集个人信息</li>
-        <li><span class="privacy-check">✓</span> 联网仅请求公开 POI 数据</li>
+        <li><span class="privacy-check">✓</span> 招牌照片不上云，端侧直接识别</li>
+        <li><span class="privacy-check">✓</span> 飞行模式也能用，完全离线运行</li>
+        <li><span class="privacy-check">✓</span> 不收集个人信息，不追踪用户行为</li>
+        <li><span class="privacy-check">✓</span> 联网仅请求公开 POI 数据，不关联身份</li>
       </ul>
     </div>
   </div>
@@ -981,12 +1244,12 @@
 
 <section class="cta-section">
   <div class="container">
-    <div class="cta-card">
+    <div class="cta-card animate-fade-up">
       <h2>准备好开始省钱了吗？</h2>
       <p>立即体验端侧 AI 带来的干饭新方式</p>
       <div class="cta-buttons">
-        <a href="https://github.com/xiaobaotalks/ganfan" class="btn btn-primary">GitHub 查看源码</a>
-        <a href="docs/model-download.md" class="btn btn-secondary">模型下载指南</a>
+        <a href="https://github.com/xiaobaotalks/ganfan" class="btn btn-white">GitHub 查看源码</a>
+        <a href="docs/model-download.md" class="btn btn-outline-white">模型下载指南</a>
       </div>
     </div>
   </div>
@@ -995,45 +1258,32 @@
 <footer>
   <p>🍚 干饭省省 · 端侧 AI 干饭比价 App</p>
   <p style="margin-top: 8px;">
-    基于 <a href="https://github.com/alibaba/MNN" target="_blank">MNN</a> + 
+    基于 <a href="https://github.com/alibaba/MNN" target="_blank">MNN</a> +
     <a href="https://www.modelscope.cn/models/MNN/Qwen3-VL-2B-Instruct-MNN" target="_blank">Qwen3-VL</a> 构建
     · <a href="https://github.com/xiaobaotalks/ganfan" target="_blank">GitHub</a>
   </p>
 </footer>
 
 <script>
-  // Smooth scroll for nav links
+  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
-  // Add scroll animation
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
+  // Scroll animation
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
+        entry.target.classList.add('visible');
       }
     });
-  }, observerOptions);
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-  document.querySelectorAll('.feature-card, .tech-item, .perf-card, .privacy-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    observer.observe(el);
-  });
+  document.querySelectorAll('.animate-fade-up').forEach(el => observer.observe(el));
 </script>
 
 </body>
