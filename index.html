@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>干饭省省 · 端侧AI干饭比价App</title>
+<meta name="description" content="扫一下餐厅招牌，1秒比价5个平台，全程离线不联网">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #141414;
+    --bg-card: #1a1a1a;
+    --accent-primary: #ff6b35;
+    --accent-secondary: #ffb347;
+    --accent-gradient: linear-gradient(135deg, #ff6b35 0%, #ffb347 100%);
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #666666;
+    --border-color: #2a2a2a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .font-display {
+    font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  /* Background effects */
+  .bg-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bg-orb-1 {
+    width: 600px;
+    height: 600px;
+    background: var(--accent-primary);
+    top: -200px;
+    right: -100px;
+  }
+
+  .bg-orb-2 {
+    width: 500px;
+    height: 500px;
+    background: var(--accent-secondary);
+    bottom: -150px;
+    left: -100px;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(10, 10, 10, 0.8);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  .nav-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent-gradient);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover {
+    color: var(--accent-primary);
+  }
+
+  .nav-cta {
+    padding: 10px 24px;
+    background: var(--accent-gradient);
+    border-radius: 8px;
+    color: #fff !important;
+    font-weight: 600;
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Hero Section */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    position: relative;
+  }
+
+  .hero-content {
+    max-width: 650px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 107, 53, 0.1);
+    border: 1px solid rgba(255, 107, 53, 0.3);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent-primary);
+    margin-bottom: 24px;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease-out 0.1s both;
+  }
+
+  .hero h1 span {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.7;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+  }
+
+  .btn {
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent-gradient);
+    color: #fff;
+    box-shadow: 0 4px 24px rgba(255, 107, 53, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.4);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 60px;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+  }
+
+  .hero-stat {
+    text-align: left;
+  }
+
+  .hero-stat-number {
+    font-size: 36px;
+    font-weight: 900;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .hero-stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Hero Visual */
+  .hero-visual {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45%;
+    max-width: 500px;
+  }
+
+  .phone-mockup {
+    position: relative;
+    aspect-ratio: 9/19;
+    background: var(--bg-card);
+    border-radius: 40px;
+    border: 3px solid #333;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-color);
+  }
+
+  .phone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 30px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    padding: 50px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .phone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+  }
+
+  .phone-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .phone-scan-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent-gradient);
+    border-radius: 16px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    margin-top: auto;
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.4);
+  }
+
+  .phone-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    backdrop-filter: blur(10px);
+  }
+
+  .phone-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .phone-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+  }
+
+  .phone-card-price {
+    color: var(--accent-primary);
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* Section common */
+  section {
+    padding: 120px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--accent-primary);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .section-title {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .section-subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Features Section */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-gradient);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(255, 107, 53, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .feature-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .feature-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 107, 53, 0.1);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .feature-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* Tech Section */
+  .tech-section {
+    background: var(--bg-secondary);
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  .tech-item {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+  }
+
+  .tech-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    background: rgba(255, 179, 71, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  .tech-content h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .tech-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* Performance Section */
+  .perf-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .perf-card {
+    text-align: center;
+    padding: 40px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    transition: all 0.3s;
+  }
+
+  .perf-card:hover {
+    border-color: rgba(255, 107, 53, 0.3);
+    transform: translateY(-4px);
+  }
+
+  .perf-number {
+    font-size: 48px;
+    font-weight: 900;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .perf-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .perf-unit {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  /* Privacy Section */
+  .privacy-section {
+    background: var(--bg-secondary);
+  }
+
+  .privacy-card {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .privacy-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+  }
+
+  .privacy-card h3 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+
+  .privacy-card p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .privacy-list {
+    list-style: none;
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .privacy-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .privacy-list li:last-child {
+    border-bottom: none;
+  }
+
+  .privacy-check {
+    color: var(--accent-primary);
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    text-align: center;
+  }
+
+  .cta-card {
+    padding: 80px 40px;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 179, 71, 0.1) 100%);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    border-radius: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+  }
+
+  .cta-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-card h2 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 900;
+    margin-bottom: 16px;
+  }
+
+  .cta-card p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Footer */
+  footer {
+    padding: 40px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  footer a {
+    color: var(--accent-primary);
+    text-decoration: none;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Responsive */
+  @media (max-width: 968px) {
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .tech-grid {
+      grid-template-columns: 1fr;
+    }
+    .perf-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .hero-visual {
+      display: none;
+    }
+    .hero-content {
+      max-width: 100%;
+    }
+    .nav-links {
+      display: none;
+    }
+    nav {
+      padding: 16px 20px;
+    }
+    .container {
+      padding: 0 20px;
+    }
+    section {
+      padding: 80px 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+    .perf-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .hero-stats {
+      gap: 24px;
+    }
+    .hero-stat-number {
+      font-size: 28px;
+    }
+    .privacy-card {
+      padding: 32px 24px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">🍚</div>
+    <span class="font-display">干饭省省</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">功能特性</a></li>
+    <li><a href="#tech">技术栈</a></li>
+    <li><a href="#perf">性能数据</a></li>
+    <li><a href="#privacy">隐私保护</a></li>
+    <li><a href="https://github.com/xiaobaotalks/ganfan" class="nav-cta">GitHub ⭐</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        端侧 AI 创新挑战赛参赛作品
+      </div>
+      <h1>
+        扫一下招牌<br>
+        <span>1秒比价5平台</span>
+      </h1>
+      <p class="hero-subtitle">
+        干饭省省是一款基于 MNN + Qwen3-VL 的端侧 AI 干饭比价 App。
+        对准餐厅招牌拍一张照，自动识别品牌并比对 5 大平台价格，
+        <strong>全程离线、照片不上云</strong>。
+      </p>
+      <div class="hero-buttons">
+        <a href="#features" class="btn btn-primary">了解更多 →</a>
+        <a href="https://github.com/xiaobaotalks/ganfan" class="btn btn-secondary">GitHub 源码</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-number">5</div>
+          <div class="hero-stat-label">比价平台</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">100%</div>
+          <div class="hero-stat-label">离线运行</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">1.5GB</div>
+          <div class="hero-stat-label">模型大小</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-header">
+            <span class="phone-title">🍚 干饭省省</span>
+            <span style="font-size: 12px; color: #ff6b35;">● 离线模式</span>
+          </div>
+          <div class="phone-card">
+            <div class="phone-card-title">🏪 麦当劳（南京路店）</div>
+            <div class="phone-card-row">
+              <span>抖音团购</span>
+              <span class="phone-card-price">¥19.9</span>
+            </div>
+            <div class="phone-card-row">
+              <span>美团外卖</span>
+              <span style="color: #a0a0a0;">¥29.9</span>
+            </div>
+            <div class="phone-card-row">
+              <span>淘宝闪购</span>
+              <span style="color: #a0a0a0;">¥25.9</span>
+            </div>
+          </div>
+          <div class="phone-scan-btn">
+            📸 扫招牌比价
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">功能特性</span>
+      <h2 class="section-title">为什么选择干饭省省？</h2>
+      <p class="section-subtitle">端侧 AI 加持，让每一顿饭都吃得更划算</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📸</div>
+        <h3 class="feature-title">招牌智能识别</h3>
+        <p class="feature-desc">对准餐厅招牌拍一张照，端侧 VLM 模型直接识别品牌名称，无需手动输入搜索。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3 class="feature-title">五平台实时比价</h3>
+        <p class="feature-desc">覆盖抖音团购、美团、美团外卖、淘宝闪购、京东秒送，一键直达最低价。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3 class="feature-title">GPS 自动匹配</h3>
+        <p class="feature-desc">根据当前位置自动筛选最近的分店，比价结果更精准，导航更方便。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">完全离线运行</h3>
+        <p class="feature-desc">招牌照片 100% 本地处理，不上传任何服务器。飞行模式也能正常使用。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">秒省限时秒杀</h3>
+        <p class="feature-desc">饭点限时秒杀专区，实时展示各大平台的超值套餐，手慢无。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3 class="feature-title">省圈拼单拼团</h3>
+        <p class="feature-desc">本地干饭群，拼单拼团更划算。发现更多周边美食优惠。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tech" class="tech-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">技术栈</span>
+      <h2 class="section-title">硬核技术，端侧开花</h2>
+      <p class="section-subtitle">基于 MNN 推理框架 + Qwen3-VL 多模态大模型</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-item">
+        <div class="tech-icon">🧠</div>
+        <div class="tech-content">
+          <h4>MNN 推理框架</h4>
+          <p>阿里开源端侧推理引擎，高性能、轻量级，支持 INT4 量化加速</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🤖</div>
+        <div class="tech-content">
+          <h4>Qwen3-VL-2B-Instruct</h4>
+          <p>通义千问多模态大模型，20 亿参数，视觉理解能力出色</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📱</div>
+        <div class="tech-content">
+          <h4>Android + Jetpack Compose</h4>
+          <p>现代声明式 UI 框架，流畅的原生体验，Material You 设计</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">⚙️</div>
+        <div class="tech-content">
+          <h4>C++ / JNI / CMake</h4>
+          <p>原生层实现推理逻辑，通过 JNI 与 Kotlin 交互，性能最大化</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🌐</div>
+        <div class="tech-content">
+          <h4>OkHttp + 高德 POI</h4>
+          <p>联网模式下获取高德 POI 公开数据，补充餐厅信息</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📍</div>
+        <div class="tech-content">
+          <h4>Android Location</h4>
+          <p>系统级 GPS 定位，精确匹配附近门店，保护位置隐私</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="perf">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">性能数据</span>
+      <h2 class="section-title">速度与激情</h2>
+      <p class="section-subtitle">骁龙 8 Gen 2 及以上机型实测数据</p>
+    </div>
+    <div class="perf-grid">
+      <div class="perf-card">
+        <div class="perf-number">13.86<span class="perf-unit">tok/s</span></div>
+        <div class="perf-label">推理速度</div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-number">1-2<span class="perf-unit">s</span></div>
+        <div class="perf-label">招牌识别</div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-number">1.5<span class="perf-unit">GB</span></div>
+        <div class="perf-label">模型大小</div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-number">INT4</div>
+        <div class="perf-label">量化方式</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="privacy" class="privacy-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">隐私保护</span>
+      <h2 class="section-title">你的照片，只属于你</h2>
+      <p class="section-subtitle">我们坚信，用户的隐私比什么都重要</p>
+    </div>
+    <div class="privacy-card">
+      <div class="privacy-icon">🔐</div>
+      <h3>100% 本地处理</h3>
+      <p>所有图像识别和推理都在手机本地完成，招牌照片不会上传到任何服务器。</p>
+      <ul class="privacy-list">
+        <li><span class="privacy-check">✓</span> 招牌照片不上云</li>
+        <li><span class="privacy-check">✓</span> 飞行模式也能用</li>
+        <li><span class="privacy-check">✓</span> 不收集个人信息</li>
+        <li><span class="privacy-check">✓</span> 联网仅请求公开 POI 数据</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <h2>准备好开始省钱了吗？</h2>
+      <p>立即体验端侧 AI 带来的干饭新方式</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/xiaobaotalks/ganfan" class="btn btn-primary">GitHub 查看源码</a>
+        <a href="docs/model-download.md" class="btn btn-secondary">模型下载指南</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>🍚 干饭省省 · 端侧 AI 干饭比价 App</p>
+  <p style="margin-top: 8px;">
+    基于 <a href="https://github.com/alibaba/MNN" target="_blank">MNN</a> + 
+    <a href="https://www.modelscope.cn/models/MNN/Qwen3-VL-2B-Instruct-MNN" target="_blank">Qwen3-VL</a> 构建
+    · <a href="https://github.com/xiaobaotalks/ganfan" target="_blank">GitHub</a>
+  </p>
+</footer>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Add scroll animation
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.feature-card, .tech-item, .perf-card, .privacy-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
