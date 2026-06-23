@@ -254,12 +254,15 @@ class SignScanActivity : ComponentActivity() {
                     return@runOnUiThread
                 }
                 // 优先用 intent extra(adb debug 可注入),否则用 GPS
-                val debugLat = if (intent.hasExtra("lat")) intent.getDoubleExtra("lat", 0.0)
-                               else if (intent.hasExtra("debug_lat")) intent.getDoubleExtra("debug_lat", 0.0)
-                               else null
-                val debugLng = if (intent.hasExtra("lng")) intent.getDoubleExtra("lng", 0.0)
-                               else if (intent.hasExtra("debug_lng")) intent.getDoubleExtra("debug_lng", 0.0)
-                               else null
+                fun readDebugExtra(key: String, altKey: String): Double? {
+                    return when {
+                        intent.hasExtra(key) -> intent.getDoubleExtra(key, 0.0)
+                        intent.hasExtra(altKey) -> intent.getDoubleExtra(altKey, 0.0)
+                        else -> null
+                    }
+                }
+                val debugLat = readDebugExtra("lat", "debug_lat")
+                val debugLng = readDebugExtra("lng", "debug_lng")
                 val loc = if (debugLat != null && debugLng != null) {
                     LocationProvider.LatLng(debugLat, debugLng)
                 } else try {

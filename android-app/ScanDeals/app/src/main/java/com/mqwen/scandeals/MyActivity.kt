@@ -41,8 +41,10 @@ class MyActivity : ComponentActivity() {
 @Composable
 fun MeScreen() {
     val ctx = androidx.compose.ui.platform.LocalContext.current
-    // 联网模式(默认关,完全本地化)
-    var onlineMode by remember { mutableStateOf(false) }
+    // 联网模式(默认关,完全本地化) - 从持久化存储加载
+    var onlineMode by remember {
+        mutableStateOf(UserPrefs.loadOnlineMode(ctx))
+    }
     // 4 个 Dialog
     var showHistory by remember { mutableStateOf(false) }
     var showPrivacy by remember { mutableStateOf(false) }
@@ -112,7 +114,10 @@ fun MeScreen() {
             }
             Switch(
                 checked = onlineMode,
-                onCheckedChange = { onlineMode = it },
+                onCheckedChange = {
+                    onlineMode = it
+                    UserPrefs.saveOnlineMode(ctx, it)
+                },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Color(0xFFFF9966),
@@ -264,6 +269,7 @@ fun HistoryDialog(onDismiss: () -> Unit) {
 
 @Composable
 fun PrivacyDialog(onlineMode: Boolean, onOnlineChange: (Boolean) -> Unit, onDismiss: () -> Unit) {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
     CommonDialog(title = "🔒 隐私设置", onDismiss = onDismiss) {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             // 联网模式开关
@@ -295,7 +301,10 @@ fun PrivacyDialog(onlineMode: Boolean, onOnlineChange: (Boolean) -> Unit, onDism
                     }
                     Switch(
                         checked = onlineMode,
-                        onCheckedChange = onOnlineChange,
+                        onCheckedChange = {
+                            onOnlineChange(it)
+                            UserPrefs.saveOnlineMode(ctx, it)
+                        },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = Color.White,
                             checkedTrackColor = Color(0xFFFF9966),

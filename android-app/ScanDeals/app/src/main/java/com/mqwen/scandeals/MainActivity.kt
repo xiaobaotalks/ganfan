@@ -137,12 +137,13 @@ fun HomePage(onJumpToFlash: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(history) { item ->
-                        RecentCard(item, onClick = {
-                            context.startActivity(Intent(context, ResultActivity::class.java).apply {
-                                putExtra("店名", item.name)
-                                putExtra("lat", item.lowestPrice)
-                            })
+                    RecentCard(item, onClick = {
+                        context.startActivity(Intent(context, ResultActivity::class.java).apply {
+                            putExtra("店名", item.name)
+                            if (item.lat != null) putExtra("lat", item.lat!!)
+                            if (item.lng != null) putExtra("lng", item.lng!!)
                         })
+                    })
                     }
                 }
             }
@@ -350,7 +351,9 @@ fun RowScope.TabItem(label: String, icon: String, selected: Boolean, onClick: ()
 data class HistoryItem(
     val name: String,
     val time: Long = System.currentTimeMillis(),
-    val lowestPrice: Double = 0.0
+    val lowestPrice: Double = 0.0,
+    val lat: Double? = null,
+    val lng: Double? = null
 )
 
 @Composable
@@ -385,14 +388,13 @@ fun FeatureButton(
 object HistoryRepo {
     private const val MAX = 5
     private val cache = mutableListOf<HistoryItem>().apply {
-        add(HistoryItem("爆汁小虾", System.currentTimeMillis() - 1000L * 60 * 5, 39.0))
-        add(HistoryItem("瑞幸咖啡", System.currentTimeMillis() - 1000L * 60 * 60 * 2, 8.8))
-        add(HistoryItem("麦当劳", System.currentTimeMillis() - 1000L * 60 * 60 * 24, 11.9))
+        add(HistoryItem("爆汁小虾", System.currentTimeMillis() - 1000L * 60 * 5, 39.0, 39.9870, 116.3070))
+        add(HistoryItem("瑞幸咖啡", System.currentTimeMillis() - 1000L * 60 * 60 * 2, 8.8, 39.9925, 116.3370))
+        add(HistoryItem("麦当劳", System.currentTimeMillis() - 1000L * 60 * 60 * 24, 11.9, 39.9788, 116.3150))
     }
     fun recent(): List<HistoryItem> = cache.toList()
     fun add(item: HistoryItem) {
         cache.add(0, item)
-        // 只保留最近 5 家
         while (cache.size > MAX) cache.removeAt(cache.size - 1)
     }
     fun clear() = cache.clear()

@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <mutex>
 
 #include "MNN/Interpreter.hpp"
 #include "MNN/ImageProcess.hpp"
@@ -21,6 +22,7 @@
 
 static std::unique_ptr<MNN::Transformer::Llm> g_llm;
 static std::string g_config_path;
+static std::mutex g_llm_mutex;
 
 extern "C" JNIEXPORT jboolean JNICALL
 Java_com_mqwen_scandeals_MnnBridge_nativeInit(
@@ -76,6 +78,7 @@ Java_com_mqwen_scandeals_MnnBridge_nativeInit(
 
     try {
         LOGI("nativeInit: calling createLLM...");
+        std::lock_guard<std::mutex> lock(g_llm_mutex);
         g_llm.reset(MNN::Transformer::Llm::createLLM(g_config_path));
         if (!g_llm) {
             LOGE("createLLM returned null");
@@ -108,11 +111,6 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_mqwen_scandeals_MnnBridge_nativeRunVlm(
     JNIEnv* env, jclass, jstring jImagePath, jstring jPrompt) {
 
-    if (!g_llm) {
-        LOGE("nativeRunVlm: llm not initialized");
-        return env->NewStringUTF(R"({"error":"llm not initialized"})");
-    }
-
     const char* image_path = env->GetStringUTFChars(jImagePath, nullptr);
     const char* prompt = env->GetStringUTFChars(jPrompt, nullptr);
 
@@ -126,12 +124,11 @@ Java_com_mqwen_scandeals_MnnBridge_nativeRunVlm(
     env->ReleaseStringUTFChars(jPrompt, prompt);
 
     try {
-        // MNN Omni 多模态 API:
-        //   - prompt_template 包含 <img>file_path</img> 标记
-        //   - tokenizer_encode(MultimodalPrompt) 自动用正则 <img>...</img> 匹配
-        //   - 内部 processImageContent 自动 imread + vision encoder + 返回 image_pad token 序列
-        //   - Omni::embedding 自动把 image_pad 替换为 vision embedding
-        // 所以我们什么都不用做,只要 prompt 格式对就行
+        std::lock_guard<std::mutex> lock(g_llm_mutex);
+        if (!g_llm) {
+            LOGE("nativeRunVlm: llm not initialized");
+            return env->NewStringUTF(R"({"error":"llm not initialized"})");
+        }
         LOGI("nativeRunVlm: prompt=%s", prompt_str.c_str());
 
         MNN::Transformer::MultimodalPrompt mm_input;
@@ -171,6 +168,7 @@ Java_com_mqwen_scandeals_MnnBridge_nativeRuntimeInfo(JNIEnv* env, jclass) {
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_mqwen_scandeals_MnnBridge_nativeRelease(JNIEnv* env, jclass) {
+    std::lock_guard<std::mutex> lock(g_llm_mutex);
     if (g_llm) {
         LOGI("nativeRelease: releasing llm");
         g_llm.reset();

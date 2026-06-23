@@ -57,7 +57,9 @@ class ResultActivity : ComponentActivity() {
                 HistoryItem(
                     name = storeName,
                     time = System.currentTimeMillis(),
-                    lowestPrice = lowest?.price ?: 0.0
+                    lowestPrice = lowest?.price ?: 0.0,
+                    lat = initLat,
+                    lng = initLng
                 )
             )
         }

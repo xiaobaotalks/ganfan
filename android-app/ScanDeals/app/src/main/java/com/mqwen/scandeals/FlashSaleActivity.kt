@@ -193,8 +193,8 @@ private fun FlashCard(item: FlashSaleActivity.FlashItem, onBuy: (String) -> Unit
 
 // 顶层数据(供 Composable 直接引用)
 private val flashItems = listOf(
-    FlashSaleActivity.FlashItem("🍰", "景荷山玛(黄醇黄苷)二色 将呆菠", "秒杀结束", 95.8, listOf("即将结束", "仅剩 X 份")),
-    FlashSaleActivity.FlashItem("🍞", "宝葛平包多芬(秒杀跪) 银将呆菠", "秒杀结束", 95.8, listOf("即将结束", "仅剩 X 份")),
-    FlashSaleActivity.FlashItem("🥮", "景荷山玛(黄醇黄苷)二色 将呆菠", "平茶黄仑 秒结品", 45.8, listOf("即将结束", "仅剩 X 份")),
-    FlashSaleActivity.FlashItem("🍑", "壹葛平包多芬(乙色荔包) 银将呆菠", "甲条鲜 C位计任通购", 95.8, listOf("即将结束", "仅剩 X 份"))
+    FlashSaleActivity.FlashItem("🍔", "麦当劳 麦辣鸡腿堡单人餐", "秒杀价", 11.9, listOf("即将结束", "仅剩 23 份")),
+    FlashSaleActivity.FlashItem("☕", "瑞幸咖啡 生椰拿铁 大杯", "秒杀价", 9.9, listOf("即将结束", "仅剩 56 份")),
+    FlashSaleActivity.FlashItem("🍕", "必胜客 超级至尊披萨 9寸", "秒杀价", 45.8, listOf("即将结束", "仅剩 12 份")),
+    FlashSaleActivity.FlashItem("🍗", "肯德基 香辣鸡翅 2块装", "秒杀价", 6.9, listOf("即将结束", "仅剩 89 份"))
 )

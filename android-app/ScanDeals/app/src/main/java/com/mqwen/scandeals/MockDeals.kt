@@ -215,18 +215,19 @@ object MockDeals {
         )
     )
 
-    /** 关键词 → 品牌 */
+    /** 关键词 → 品牌(按关键词长度降序匹配,优先匹配更长更精确的) */
     fun findBrand(storeName: String): Brand? {
         if (storeName.isBlank()) return null
         val lower = storeName.lowercase()
-        return brands.firstOrNull { brand ->
+        val candidates = brands.flatMap { brand ->
             val keywords = listOf(brand.brand) + extraKeywords(brand.brand)
-            keywords.any { kw ->
+            keywords.mapNotNull { kw ->
                 val kwl = kw.lowercase()
-                kwl.isNotEmpty() && lower.isNotEmpty() &&
-                (kwl in lower || lower in kwl)
+                if (kwl.length >= 2 && kwl in lower) Pair(brand, kwl.length)
+                else null
             }
         }
+        return candidates.maxByOrNull { it.second }?.first
     }
 
     private fun extraKeywords(brand: String): List<String> = when (brand) {

@@ -145,15 +145,20 @@ BRANDS = [
 
 
 def find_brand(store_name: str) -> Optional[Brand]:
+    """按关键词长度降序匹配,优先匹配更长更精确的"""
     if not store_name:
         return None
     lower = store_name.lower()
+    candidates = []
     for brand in BRANDS:
         for kw in brand.keywords:
             kw_lower = kw.lower()
-            if kw_lower and lower and (kw_lower in lower or lower in kw_lower):
-                return brand
-    return None
+            if len(kw_lower) >= 2 and kw_lower in lower:
+                candidates.append((brand, len(kw_lower)))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda x: x[1], reverse=True)
+    return candidates[0][0]
 
 
 def format_distance(meters: float) -> str:
